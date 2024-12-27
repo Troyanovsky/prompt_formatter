@@ -1,10 +1,11 @@
 # Prompt Formatter
 
-A tool that helps format text by dynamically including file contents from a specified folder. Perfect for creating templates or documentation that need to reference multiple files for GPT/Claude/Gemini or other LLM.
+A tool that helps format text by dynamically including file contents from a specified folder or URLs. Perfect for creating prompts or documentation that need to reference multiple files or web resources for GPT/Claude/Gemini or other LLM.
 
 ## Features
 
 - Dynamic file content insertion using @file_path syntax
+- URL content fetching using @url syntax
 - Auto-completion dropdown for file selection
 - Support for multiple text-based file formats
 - Preview of formatted output
@@ -31,17 +32,15 @@ A tool that helps format text by dynamically including file contents from a spec
 
 ## Installation
 
-1. Install required Python packages:
+1. Clone the repository:
 ```bash
-pip install fastapi uvicorn
+git clone https://github.com/Troyanovsky/prompt_formatter.git
+cd prompt_formatter
 ```
 
-2. Create the project structure:
+2. Install required Python packages:
 ```bash
-mkdir prompt-formatter
-cd prompt-formatter
-mkdir static
-# Copy app.py and index.html into this directory
+pip install fastapi uvicorn
 ```
 
 ## Usage
@@ -60,7 +59,7 @@ The application will now be available directly through the FastAPI server - no n
 
 ## Syntax
 
-To reference a file in your input:
+### To reference a local file:
 ```
 @filename.ext
 ```
@@ -72,11 +71,24 @@ The formatter will replace this with:
 </file>
 ```
 
+### To reference a URL:
+```
+@https://example.com/path/to/resource
+```
+
+The formatter will replace this with:
+```
+<web_page>#https://example.com/path/to/resource
+[content from URL here]
+</web_page>
+```
+
 ## Example
 
 Input:
 ```
 Here is my Python script: @script.py
+Here is a web resource: @https://raw.githubusercontent.com/user/repo/main/example.txt
 And here is my config: @config.json
 ```
 
@@ -87,6 +99,10 @@ Here is my Python script:
 def hello():
     print("Hello, World!")
 </file>
+Here is a web resource:
+<web_page>#https://raw.githubusercontent.com/user/repo/main/example.txt
+[Content fetched from URL]
+</web_page>
 And here is my config: 
 <file>#config.json
 {
