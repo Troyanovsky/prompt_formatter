@@ -29,7 +29,30 @@ async def read_root():
 # Supported file extensions
 SUPPORTED_EXTENSIONS = {
     '.txt', '.md', '.json', '.csv', '.py', '.js', '.css', '.html', 
-    '.yml', '.yaml', '.xml', '.ini', '.conf', '.sh', '.bat'
+    '.yml', '.yaml', '.xml', '.ini', '.conf', '.sh', '.bat', '.tsx',
+    # Additional extensions:
+    '.log', '.rtf', '.tex', '.asciidoc', '.adoc',  # Text and markup files
+    '.c', '.cpp', '.cc', '.cxx', '.h', '.hpp', '.hxx',  # C/C++ files
+    '.java',  # Java source files
+    '.rb',  # Ruby source files
+    '.php',  # PHP source files
+    '.go',  # Go language files
+    '.swift',  # Swift source files
+    '.rs',  # Rust source files
+    '.kt', '.kts',  # Kotlin source files
+    '.toml',  # TOML configuration files
+    '.env',  # Environment variable files
+    '.tsv',  # Tab-separated values files
+    '.sql',  # SQL script files
+    '.zsh',  # Z shell script files
+    '.fish',  # Fish shell script files
+    '.pl',  # Perl script files
+    '.awk',  # AWK script files
+    '.scss', '.sass',  # SASS/SCSS files
+    '.less',  # LESS files
+    '.jsx',  # JavaScript with JSX syntax
+    '.vue',  # Vue.js component files
+    '.svg',  # Scalable Vector Graphics files
 }
 
 class FolderRequest(BaseModel):
