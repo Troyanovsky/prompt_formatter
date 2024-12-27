@@ -59,6 +59,18 @@ The application will now be available directly through the FastAPI server - no n
 
 ## Syntax
 
+### To reference folder structure:
+```
+@folder_structure
+```
+
+The formatter will replace this with:
+```
+<folder_structure>
+[list of all files in the folder and subfolders]
+</folder_structure>
+```
+
 ### To reference a local file:
 ```
 @filename.ext
