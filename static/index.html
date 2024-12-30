@@ -49,7 +49,7 @@
                         v-model="input"
                         @input="handleInput"
                         class="w-full h-64 p-2 border rounded"
-                        placeholder="Type your text here... Use @ to reference files"
+                        placeholder="Type your text here... Use @ to reference files or web content, or @folder_structure to include the folder structure"
                     ></textarea>
 
                     <!-- Dropdown for file selection -->
@@ -79,6 +79,16 @@
             </div>
 
             <p v-if="error" class="mt-4 text-red-500">{{ error }}</p>
+
+            <div class="mt-4 flex items-center">
+                <input 
+                    type="checkbox" 
+                    id="formatXml" 
+                    v-model="formatXml"
+                    class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                >
+                <label for="formatXml" class="ml-2 text-gray-700">Format XML</label>
+            </div>
 
             <button 
                 @click="formatPrompt"
@@ -127,7 +137,8 @@
                     showDropdown: false,
                     currentWord: '',
                     cursorPosition: 0,
-                    copyButtonText: 'Copy Formatted Prompt'
+                    copyButtonText: 'Copy Formatted Prompt',
+                    formatXml: false
                 }
             },
             computed: {
@@ -186,6 +197,33 @@
                         this.cursorPosition = position;
                     } else {
                         this.showDropdown = false;
+                    }
+
+                    // Add XML auto-completion logic
+                    if (this.formatXml && text[position - 1] === '>') {
+                        const beforeTag = text.substring(0, position);
+                        const match = beforeTag.match(/<(\w+)[^>]*>$/);
+                        
+                        if (match) {
+                            const tagName = match[1];
+                            const afterCursor = text.substring(position);
+                            
+                            // Check if closing tag already exists
+                            const closeTagRegex = new RegExp(`</${tagName}>`);
+                            if (!closeTagRegex.test(afterCursor)) {
+                                // Insert closing tag
+                                const newText = `${beforeTag}${afterCursor}</${tagName}>`;
+                                this.input = newText;
+                                
+                                // Set cursor position between tags
+                                setTimeout(() => {
+                                    const textarea = event.target;
+                                    textarea.selectionStart = position;
+                                    textarea.selectionEnd = position;
+                                    textarea.focus();
+                                }, 0);
+                            }
+                        }
                     }
                 },
 
