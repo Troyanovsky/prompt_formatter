@@ -51,8 +51,7 @@ SUPPORTED_EXTENSIONS = {
     '.scss', '.sass',  # SASS/SCSS files
     '.less',  # LESS files
     '.jsx',  # JavaScript with JSX syntax
-    '.vue',  # Vue.js component files
-    '.svg',  # Scalable Vector Graphics files
+    '.vue'  # Vue.js component files
 }
 
 class FolderRequest(BaseModel):
