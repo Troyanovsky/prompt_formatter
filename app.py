@@ -183,13 +183,35 @@ async def format_prompt(request: FormatRequest):
     if not folder_path.exists() or not folder_path.is_dir():
         raise HTTPException(status_code=400, detail="Invalid folder path")
     
-    words = input_text.split()
-    for i, word in enumerate(words):
-        if word.startswith("@"):
-            target = word[1:]  # Remove @ symbol
-            words[i] = process_target(folder_path, target)
+    # Process the text while preserving whitespace
+    result = []
+    current_word = []
     
-    return {"formatted_text": " ".join(words)}
+    for char in input_text:
+        if char.isspace():
+            # Process any accumulated word
+            if current_word:
+                word = ''.join(current_word)
+                if word.startswith('@'):
+                    target = word[1:]  # Remove @ symbol
+                    result.append(process_target(folder_path, target))
+                else:
+                    result.append(word)
+                current_word = []
+            result.append(char)  # Preserve the whitespace character
+        else:
+            current_word.append(char)
+    
+    # Process the last word if exists
+    if current_word:
+        word = ''.join(current_word)
+        if word.startswith('@'):
+            target = word[1:]  # Remove @ symbol
+            result.append(process_target(folder_path, target))
+        else:
+            result.append(word)
+    
+    return {"formatted_text": ''.join(result)}
 
 if __name__ == "__main__":
     import uvicorn

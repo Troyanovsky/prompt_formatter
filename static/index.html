@@ -38,8 +38,17 @@
                     Change Folder
                 </button>
             </div>
-            <div v-if="folderPath" class="mb-1 text-gray-600">
-                Current folder: {{ folderPath }}
+            <div v-if="folderPath" class="mb-1 text-gray-600 flex items-center gap-2">
+                <span>Current folder: {{ folderPath }}</span>
+                <button 
+                    @click="refreshFiles"
+                    class="text-blue-500 hover:text-blue-700"
+                    title="Refresh file list"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                    </svg>
+                </button>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -158,7 +167,7 @@
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ path: this.tempFolderPath }),
+                            body: JSON.stringify({ path: this.tempFolderPath || this.folderPath }),
                         });
                         
                         if (!response.ok) {
@@ -167,7 +176,10 @@
 
                         const data = await response.json();
                         this.files = data.files;
-                        this.folderPath = this.tempFolderPath;
+                        if (this.tempFolderPath) {
+                            this.folderPath = this.tempFolderPath;
+                            this.tempFolderPath = '';
+                        }
                         this.error = '';
                     } catch (error) {
                         this.error = error.message;
@@ -272,6 +284,10 @@
                     } catch (err) {
                         this.error = 'Failed to copy to clipboard';
                     }
+                },
+
+                refreshFiles() {
+                    this.loadFolder();
                 }
             }
         }).mount('#app')
